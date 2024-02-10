@@ -1,1 +1,1 @@
-# CicHackatonBackend
+# CicHackathonBackend
