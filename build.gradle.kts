@@ -37,6 +37,7 @@ dependencies {
     // Database
     implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
+    implementation("org.jetbrains.exposed:exposed-java-time:$exposed_version")
     implementation("com.h2database:h2:$h2_version")
     implementation("mysql:mysql-connector-java:$mysql_connector_version")
 
@@ -50,6 +51,7 @@ dependencies {
 
     // Network
     implementation("io.ktor:ktor-server-netty-jvm")
+    implementation("io.ktor:ktor-server-cors:$ktor_version")
 
     // Util
     implementation("ch.qos.logback:logback-classic:$logback_version")

@@ -1,5 +1,6 @@
 package com.lyadsky.database
 
+import com.lyadsky.database.entity.MarkerEntity
 import com.lyadsky.database.entity.UsersEntity
 import com.lyadsky.utils.Constants
 import org.jetbrains.exposed.sql.Database
@@ -18,7 +19,7 @@ object DatabaseFactory {
 
         transaction {
             addLogger(StdOutSqlLogger)
-            SchemaUtils.create(UsersEntity)
+            SchemaUtils.create(UsersEntity, MarkerEntity)
         }
     }
 

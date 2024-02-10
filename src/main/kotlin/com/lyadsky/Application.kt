@@ -5,12 +5,16 @@ import com.lyadsky.database.dao.users.UserDAOImpl
 import com.lyadsky.plugins.*
 import com.lyadsky.token.TokenConfig
 import com.lyadsky.token.TokenServiceImpl
+import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.engine.*
+import io.ktor.server.netty.*
+import io.ktor.server.plugins.cors.routing.*
 
-fun main(args: Array<String>): Unit =
-    io.ktor.server.netty.EngineMain.main(args)
+fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
 fun Application.module() {
+    configureCors()
     configureKoin()
 
     DatabaseFactory.init()

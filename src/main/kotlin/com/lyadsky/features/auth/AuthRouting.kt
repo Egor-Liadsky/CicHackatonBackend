@@ -19,7 +19,6 @@ fun Route.authRouting(tokenConfig: TokenConfig, userDAO: UserDAO, tokenService: 
         val userReceive = call.receive<UserReceive>().apply {
             this.password = this.password.hashToSha256()
         }
-        userDAO.registerUser(userReceive)
         val token = tokenService.generateJWTToken(
             tokenConfig,
             TokenClaim(name = "username", value = userReceive.username),
