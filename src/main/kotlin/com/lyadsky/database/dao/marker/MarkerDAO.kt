@@ -14,4 +14,6 @@ interface MarkerDAO {
     suspend fun updateMarker(id: Int, markerReceive: MarkerDTOReceive): MarkerDTOResponse
 
     suspend fun deleteMarker(id: Int)
+
+    suspend fun updateIsRepairStatus(id: Int, repair: Boolean): Boolean
 }

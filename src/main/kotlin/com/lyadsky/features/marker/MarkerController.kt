@@ -26,4 +26,8 @@ class MarkerController(private val markerDAO: MarkerDAO) {
         markerDAO.deleteMarker(id)
         return "Marker with id $id deleted"
     }
+
+    suspend fun updateIsRepairStatus(id: Int, repair: Boolean): Boolean {
+        return markerDAO.updateIsRepairStatus(id, repair)
+    }
 }

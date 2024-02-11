@@ -2,27 +2,26 @@ package com.lyadsky.database.dao.marker
 
 import com.lyadsky.database.DatabaseFactory.dbQuery
 import com.lyadsky.database.entity.MarkerEntity
+import com.lyadsky.database.entity.StatusEntity
 import com.lyadsky.dto.MarkerDTOReceive
 import com.lyadsky.dto.MarkerDTOResponse
 import com.lyadsky.dto.StatusDTOResponse
-import com.mysql.cj.jdbc.Blob
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.statements.api.ExposedBlob
-import javax.sql.rowset.serial.SerialBlob
+import org.slf4j.Marker
 
 class MarkerDAOImpl : MarkerDAO {
 
     override suspend fun insertMarker(markerReceive: MarkerDTOReceive): MarkerDTOResponse = dbQuery {
-//        val status = StatusEntity.toDto(markerReceive)
-       MarkerEntity.insert {
+        val status = StatusEntity.toDto(markerReceive)
+        MarkerEntity.insert {
             it[description] = markerReceive.description
             it[city] = markerReceive.city
             it[latitude] = markerReceive.latitude
             it[longitude] = markerReceive.longitude
             it[image] = markerReceive.image
             it[userCreatedId] = markerReceive.userCreatedId
-//            it[statusId] = status.id
+            it[statusId] = status.id
         }
 //        val marker = MarkerEntity.select(MarkerEntity.dateCreated eq markerReceive.).single()
 
@@ -35,19 +34,19 @@ class MarkerDAOImpl : MarkerDAO {
             image = markerReceive.image,
             dateCreated = "date",
             userCreatedId = markerReceive.userCreatedId,
-//            status = status
+            isRepair = false,
+            status = status
         )
     }
 
     override suspend fun getMarker(id: Int): MarkerDTOResponse = dbQuery {
         val marker = MarkerEntity.select(MarkerEntity.rowId eq id).map { markerItem ->
-//            val status = StatusEntity.select(StatusEntity.markerId eq markerItem[MarkerEntity.rowId]).map {
-//                StatusDTOResponse(
-//                    id = it[StatusEntity.rowId],
-//                    markerId = it[StatusEntity.markerId],
-//                    name = it[StatusEntity.name]
-//                )
-//            }.single()
+            val status = StatusEntity.select(StatusEntity.rowId eq markerItem[MarkerEntity.statusId]).map {
+                StatusDTOResponse(
+                    id = it[StatusEntity.rowId],
+                    name = it[StatusEntity.name]
+                )
+            }.single()
             MarkerDTOResponse(
                 id = markerItem[MarkerEntity.rowId],
                 description = markerItem[MarkerEntity.description],
@@ -57,7 +56,8 @@ class MarkerDAOImpl : MarkerDAO {
                 image = markerItem[MarkerEntity.image],
                 dateCreated = markerItem[MarkerEntity.dateCreated].toString(),
                 userCreatedId = markerItem[MarkerEntity.userCreatedId],
-//                status = status
+                isRepair = markerItem[MarkerEntity.isRepair],
+                status = status
             )
         }.single()
 
@@ -66,13 +66,12 @@ class MarkerDAOImpl : MarkerDAO {
 
     override suspend fun getMarkers(): List<MarkerDTOResponse> = dbQuery {
         val markers = MarkerEntity.selectAll().map { markerItem ->
-//            val status = StatusEntity.select(StatusEntity.markerId eq markerItem[MarkerEntity.rowId]).map {
-//                StatusDTOResponse(
-//                    id = it[StatusEntity.rowId],
-//                    markerId = it[StatusEntity.markerId],
-//                    name = it[StatusEntity.name]
-//                )
-//            }.single()
+            val status = StatusEntity.select(StatusEntity.rowId eq markerItem[MarkerEntity.statusId]).map {
+                StatusDTOResponse(
+                    id = it[StatusEntity.rowId],
+                    name = it[StatusEntity.name]
+                )
+            }.single()
             MarkerDTOResponse(
                 id = markerItem[MarkerEntity.rowId],
                 description = markerItem[MarkerEntity.description],
@@ -82,7 +81,8 @@ class MarkerDAOImpl : MarkerDAO {
                 image = markerItem[MarkerEntity.image],
                 dateCreated = markerItem[MarkerEntity.dateCreated].toString(),
                 userCreatedId = markerItem[MarkerEntity.userCreatedId],
-//                status = status
+                isRepair = markerItem[MarkerEntity.isRepair],
+                status = status
             )
         }
         return@dbQuery markers
@@ -90,7 +90,7 @@ class MarkerDAOImpl : MarkerDAO {
 
     override suspend fun updateMarker(id: Int, markerReceive: MarkerDTOReceive): MarkerDTOResponse = dbQuery {
         val marker = MarkerEntity.select(MarkerEntity.rowId eq id).single()
-//        val status = StatusEntity.toDto(markerReceive)
+        val status = StatusEntity.toDto(markerReceive)
 
         MarkerEntity.update({ MarkerEntity.rowId eq id }) {
             it[description] = markerReceive.description
@@ -99,7 +99,7 @@ class MarkerDAOImpl : MarkerDAO {
             it[longitude] = markerReceive.longitude
             it[image] = markerReceive.image
             it[userCreatedId] = markerReceive.userCreatedId
-//            it[statusId] = status.id
+            it[statusId] = status.id
         }
         return@dbQuery MarkerDTOResponse(
             id = marker[MarkerEntity.rowId],
@@ -110,7 +110,8 @@ class MarkerDAOImpl : MarkerDAO {
             image = markerReceive.image,
             dateCreated = marker[MarkerEntity.dateCreated].toString(),
             userCreatedId = marker[MarkerEntity.userCreatedId],
-//            status = status
+            isRepair = marker[MarkerEntity.isRepair],
+            status = status
         )
     }
 
@@ -118,13 +119,19 @@ class MarkerDAOImpl : MarkerDAO {
         MarkerEntity.deleteWhere { MarkerEntity.rowId eq id }
         return@dbQuery
     }
+
+    override suspend fun updateIsRepairStatus(id: Int, repair: Boolean): Boolean = dbQuery {
+        MarkerEntity.update({ MarkerEntity.rowId eq id }) {
+            it[isRepair] = repair
+        }
+        return@dbQuery repair
+    }
 }
 
-//fun StatusEntity.toDto(markerReceive: MarkerDTOReceive): StatusDTOResponse =
-//    StatusEntity.select(StatusEntity.name eq markerReceive.status.name).map {
-//        StatusDTOResponse(
-//            id = it[StatusEntity.rowId],
-//            markerId = it[StatusEntity.markerId],
-//            name = it[StatusEntity.name]
-//        )
-//    }.single()
+fun StatusEntity.toDto(markerReceive: MarkerDTOReceive): StatusDTOResponse =
+    StatusEntity.select(StatusEntity.rowId eq markerReceive.statusId).map {
+        StatusDTOResponse(
+            id = it[rowId],
+            name = it[name]
+        )
+    }.single()

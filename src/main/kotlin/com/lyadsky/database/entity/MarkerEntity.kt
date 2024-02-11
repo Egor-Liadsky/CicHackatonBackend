@@ -13,7 +13,8 @@ object MarkerEntity : Table("markers") {
     val image = text("image")
     val dateCreated = datetime("dateCreated").defaultExpression(CurrentDateTime)
     val userCreatedId = varchar("userCreatedId", 80)
-//    val statusId = integer("id_status").references(StatusEntity.rowId)
+    val isRepair = bool("is_repair")
+    val statusId = integer("id_status").references(StatusEntity.rowId)
 
     override val primaryKey = PrimaryKey(rowId, name = "id_marker")
 }

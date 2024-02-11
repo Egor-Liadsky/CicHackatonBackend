@@ -10,7 +10,8 @@ data class MarkerDTOReceive(
     val longitude: String,
     val image: String,
     val userCreatedId: String,
-//    val status: StatusDTOReceive
+    val isRepair: Boolean? = false,
+    val statusId: Int
 )
 
 @Serializable
@@ -23,5 +24,12 @@ data class MarkerDTOResponse(
     val image: String,
     val dateCreated: String,
     val userCreatedId: String,
-//    val status: StatusDTOResponse
+    val isRepair: Boolean,
+    val status: StatusDTOResponse
+)
+
+@Serializable
+data class Repair(
+    val id: Int,
+    val status: Boolean
 )
