@@ -30,4 +30,8 @@ class MarkerController(private val markerDAO: MarkerDAO) {
     suspend fun updateIsRepairStatus(id: Int, repair: Boolean): Boolean {
         return markerDAO.updateIsRepairStatus(id, repair)
     }
+
+    suspend fun updateValidateStatus(id: Int, validate: Boolean): Boolean {
+        return markerDAO.updateValidate(id, validate)
+    }
 }

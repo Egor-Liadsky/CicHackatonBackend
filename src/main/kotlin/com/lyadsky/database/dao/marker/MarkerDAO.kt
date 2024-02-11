@@ -16,4 +16,6 @@ interface MarkerDAO {
     suspend fun deleteMarker(id: Int)
 
     suspend fun updateIsRepairStatus(id: Int, repair: Boolean): Boolean
+
+    suspend fun updateValidate(id: Int, validate: Boolean): Boolean
 }

@@ -35,6 +35,7 @@ fun Route.statusRouting() {
 
     delete("api/status/{id?}") {
         val id = call.parameters["id"] ?: return@delete call.respond(HttpStatusCode.NotFound, "Status not found")
+        statusDAO.deleteStatus(id.toInt())
         call.respond(HttpStatusCode.OK, "Status with id $id deleted")
     }
 }

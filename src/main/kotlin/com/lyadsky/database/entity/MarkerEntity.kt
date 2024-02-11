@@ -14,6 +14,7 @@ object MarkerEntity : Table("markers") {
     val dateCreated = datetime("dateCreated").defaultExpression(CurrentDateTime)
     val userCreatedId = varchar("userCreatedId", 80)
     val isRepair = bool("is_repair")
+    val isValidate = bool("is_validate")
     val statusId = integer("id_status").references(StatusEntity.rowId)
 
     override val primaryKey = PrimaryKey(rowId, name = "id_marker")

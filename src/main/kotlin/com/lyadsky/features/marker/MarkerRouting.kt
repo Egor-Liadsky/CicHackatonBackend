@@ -29,22 +29,29 @@ fun Route.markerRouting() {
         call.respond(HttpStatusCode.OK, markerController.getMarkers())
     }
 
-    put("api/markers/{id?}") {
-        val markerReceive = call.receive<MarkerDTOReceive>()
-        val id = call.parameters["id"] ?: return@put call.respond(HttpStatusCode.NotFound, "Marker not found")
-        call.respond(HttpStatusCode.OK, markerController.updateMarker(id.toInt(), markerReceive))
-    }
+    authenticate("auth-jwt") {
 
-    delete("api/markers/{id?}") {
-        val id = call.parameters["id"] ?: return@delete call.respond(HttpStatusCode.NotFound, "Marker not found")
-        call.respond(HttpStatusCode.OK, markerController.deleteMarker(id.toInt()))
-    }
+        put("api/markers/{id?}") {
+            val markerReceive = call.receive<MarkerDTOReceive>()
+            val id = call.parameters["id"] ?: return@put call.respond(HttpStatusCode.NotFound, "Marker not found")
+            call.respond(HttpStatusCode.OK, markerController.updateMarker(id.toInt(), markerReceive))
+        }
 
-    put("api/markers/repair/{id?}&{repair?}") {
-        val id = call.parameters["id"] ?: return@put call.respond(HttpStatusCode.NotFound, "Marker not found")
-        val repair = call.parameters["repair"]
-//        val receive = call.receive<Repair>()
-//        call.respond(HttpStatusCode.OK, markerController.updateIsRepairStatus(receive.id, receive.status))
-        call.respond(HttpStatusCode.OK, markerController.updateIsRepairStatus(id.toInt(), repair.toBoolean()))
+        delete("api/markers/{id?}") {
+            val id = call.parameters["id"] ?: return@delete call.respond(HttpStatusCode.NotFound, "Marker not found")
+            call.respond(HttpStatusCode.OK, markerController.deleteMarker(id.toInt()))
+        }
+
+        put("api/markers/repair/{id?}&{repair?}") {
+            val id = call.parameters["id"] ?: return@put call.respond(HttpStatusCode.NotFound, "Marker not found")
+            val repair = call.parameters["repair"]
+            call.respond(HttpStatusCode.OK, markerController.updateIsRepairStatus(id.toInt(), repair.toBoolean()))
+        }
+
+        put("api/markers/validate/{id?}&{validate?}") {
+            val id = call.parameters["id"] ?: return@put call.respond(HttpStatusCode.NotFound, "Marker not found")
+            val validate = call.parameters["validate"]
+            call.respond(HttpStatusCode.OK, markerController.updateValidateStatus(id.toInt(), validate.toBoolean()))
+        }
     }
 }

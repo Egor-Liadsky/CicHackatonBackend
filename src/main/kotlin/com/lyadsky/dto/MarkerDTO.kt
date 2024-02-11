@@ -10,7 +10,6 @@ data class MarkerDTOReceive(
     val longitude: String,
     val image: String,
     val userCreatedId: String,
-    val isRepair: Boolean? = false,
     val statusId: Int
 )
 
@@ -25,6 +24,7 @@ data class MarkerDTOResponse(
     val dateCreated: String,
     val userCreatedId: String,
     val isRepair: Boolean,
+    val isValidate: Boolean,
     val status: StatusDTOResponse
 )
 

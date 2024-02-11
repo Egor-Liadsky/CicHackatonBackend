@@ -35,6 +35,7 @@ class MarkerDAOImpl : MarkerDAO {
             dateCreated = "date",
             userCreatedId = markerReceive.userCreatedId,
             isRepair = false,
+            isValidate = false,
             status = status
         )
     }
@@ -57,6 +58,7 @@ class MarkerDAOImpl : MarkerDAO {
                 dateCreated = markerItem[MarkerEntity.dateCreated].toString(),
                 userCreatedId = markerItem[MarkerEntity.userCreatedId],
                 isRepair = markerItem[MarkerEntity.isRepair],
+                isValidate = markerItem[MarkerEntity.isValidate],
                 status = status
             )
         }.single()
@@ -82,6 +84,7 @@ class MarkerDAOImpl : MarkerDAO {
                 dateCreated = markerItem[MarkerEntity.dateCreated].toString(),
                 userCreatedId = markerItem[MarkerEntity.userCreatedId],
                 isRepair = markerItem[MarkerEntity.isRepair],
+                isValidate = markerItem[MarkerEntity.isValidate],
                 status = status
             )
         }
@@ -111,6 +114,7 @@ class MarkerDAOImpl : MarkerDAO {
             dateCreated = marker[MarkerEntity.dateCreated].toString(),
             userCreatedId = marker[MarkerEntity.userCreatedId],
             isRepair = marker[MarkerEntity.isRepair],
+            isValidate = marker[MarkerEntity.isValidate],
             status = status
         )
     }
@@ -125,6 +129,13 @@ class MarkerDAOImpl : MarkerDAO {
             it[isRepair] = repair
         }
         return@dbQuery repair
+    }
+
+    override suspend fun updateValidate(id: Int, validate: Boolean): Boolean = dbQuery {
+        MarkerEntity.update({ MarkerEntity.rowId eq id }) {
+            it[isValidate] = validate
+        }
+        return@dbQuery validate
     }
 }
 
