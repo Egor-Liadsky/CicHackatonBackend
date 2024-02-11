@@ -9,7 +9,8 @@ data class MarkerDTOReceive(
     val latitude: String,
     val longitude: String,
     val image: String,
-    val userCreatedId: String
+    val userCreatedId: String,
+//    val status: StatusDTOReceive
 )
 
 @Serializable
@@ -21,5 +22,6 @@ data class MarkerDTOResponse(
     val longitude: String,
     val image: String,
     val dateCreated: String,
-    val userCreatedId: String
+    val userCreatedId: String,
+//    val status: StatusDTOResponse
 )

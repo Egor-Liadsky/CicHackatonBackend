@@ -10,9 +10,10 @@ object MarkerEntity : Table("markers") {
     val city = varchar("city", 80)
     val latitude = varchar("latitude", 50)
     val longitude = varchar("longitude", 50)
-    val image = varchar("image", 500)
+    val image = text("image")
     val dateCreated = datetime("dateCreated").defaultExpression(CurrentDateTime)
     val userCreatedId = varchar("userCreatedId", 80)
+//    val statusId = integer("id_status").references(StatusEntity.rowId)
 
     override val primaryKey = PrimaryKey(rowId, name = "id_marker")
 }

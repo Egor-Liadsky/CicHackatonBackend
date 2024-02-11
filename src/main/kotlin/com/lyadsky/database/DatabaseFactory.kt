@@ -14,7 +14,7 @@ object DatabaseFactory {
 
     fun init(){
         val driverName = "com.mysql.cj.jdbc.Driver"
-        val jdbcUrl = "jdbc:mysql://localhost:3306/${Constants.DATABASE_NAME}"
+        val jdbcUrl = "jdbc:mysql://localhost:3306/${Constants.DATABASE_NAME}?sessionVariables=sql_mode='NO_ENGINE_SUBSTITUTION'&jdbcCompliantTruncation=false"
         Database.connect(jdbcUrl, driverName, user = Constants.USER_DATABASE, password = Constants.PASSWORD_DATABASE)
 
         transaction {
